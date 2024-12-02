@@ -4,6 +4,21 @@
   <title>Fiszki Włoskie</title>
 </head>
 <body>
-  <h1>Witaj w aplikacji fiszek!</h1>
+  <h1>Fiszki Włoskie</h1>
+  <p id="flashcard">Kliknij przycisk!</p>
+  <button onclick="showCard()">Pokaż fiszkę</button>
+
+  <script>
+    const flashcards = [
+      { pl: "kupa", it: "caca" },
+      { pl: "Dziękuję", it: "Grazie" },
+      { pl: "Proszę", it: "Prego" }
+    ];
+
+    function showCard() {
+      const randomCard = flashcards[Math.floor(Math.random() * flashcards.length)];
+      document.getElementById('flashcard').textContent = `${randomCard.pl} - ${randomCard.it}`;
+    }
+  </script>
 </body>
 </html>
