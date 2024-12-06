@@ -24,6 +24,11 @@
       margin: 0;
       padding: 20px;
       transition: background-color 0.3s, color 0.3s;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
 
     .theme-toggle {
@@ -39,22 +44,53 @@
     }
 
     .card {
-      width: 100%;
-      max-width: 500px;
-      margin: 10px auto;
-      padding: 20px;
+      width: 300px;
+      height: 200px;
       background-color: var(--card-color);
       border: 1px solid #ccc;
       border-radius: 10px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       text-align: center;
       font-size: 24px;
-      transition: background-color 0.3s, color 0.3s;
+      transition: background-color 0.3s, color 0.3s, transform 0.5s;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      transform-style: preserve-3d;
+      cursor: pointer;
     }
 
-    .card.color-card {
-      font-size: 0;
-      padding: 0;
+    .card-content {
+      position: absolute;
+      backface-visibility: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .card-back {
+      transform: rotateY(180deg);
+    }
+
+    .card.flipped {
+      transform: rotateY(180deg);
+    }
+
+    #next-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      background-color: var(--card-color);
+      color: var(--text-color);
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      display: none;
+      transition: background-color 0.3s, color 0.3s;
     }
   </style>
 </head>
@@ -62,8 +98,14 @@
   <!-- Przycisk do zmiany trybu -->
   <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
 
-  <!-- Fiszki -->
-  <div id="flashcards"></div>
+  <!-- Kontener fiszki -->
+  <div class="card" id="flashcard" onclick="flipCard()">
+    <div class="card-content card-front" id="front">Cześć</div>
+    <div class="card-content card-back" id="back">Ciao</div>
+  </div>
+
+  <!-- Przycisk Next -->
+  <button id="next-button" onclick="showNextCard()">Next</button>
 
   <script>
     // Fiszki
@@ -88,22 +130,12 @@
       { front: "Proszę powtórzyć", back: "Per favore ripeta" },
       { front: "Na zdrowie", back: "Salute" },
       { front: "Miłego dnia", back: "Buona giornata" },
-      // Fiszki z kolorami
-      { front: "Czerwony", back: "Rosso", color: "red" },
-      { front: "Niebieski", back: "Blu", color: "blue" },
-      { front: "Zielony", back: "Verde", color: "green" },
-      { front: "Żółty", back: "Giallo", color: "yellow" },
-      { front: "Czarny", back: "Nero", color: "black" },
-      { front: "Biały", back: "Bianco", color: "white" },
-      { front: "Różowy", back: "Rosa", color: "pink" },
-      { front: "Pomarańczowy", back: "Arancione", color: "orange" },
-      { front: "Szary", back: "Grigio", color: "gray" },
-      { front: "Brązowy", back: "Marrone", color: "brown" },
-      // Nowe fiszki
       { front: "Myszka", back: "Topo" },
       { front: "Kocham Anię", back: "Amo Ania" },
       { front: "Kocham myszkę", back: "Amo il topo" }
     ];
+
+    let currentCardIndex = 0;
 
     // Funkcja losująca kolejność fiszek
     function shuffle(array) {
@@ -113,25 +145,29 @@
       }
     }
 
-    // Wyświetl fiszki
-    function displayFlashcards() {
-      shuffle(flashcardsData);
-      const container = document.getElementById("flashcards");
-      container.innerHTML = flashcardsData
-        .map((card) =>
-          card.color
-            ? `
-          <div class="card color-card" style="background-color: ${card.color}" onclick="alert('${card.back}')">
-          </div>
-        `
-            : `
-          <div class="card" onclick="this.classList.toggle('flipped')">
-            <div class="card-front">${card.front}</div>
-            <div class="card-back">${card.back}</div>
-          </div>
-        `
-        )
-        .join("");
+    shuffle(flashcardsData);
+
+    // Wyświetlanie nowej fiszki
+    function showNextCard() {
+      currentCardIndex = (currentCardIndex + 1) % flashcardsData.length;
+      const card = flashcardsData[currentCardIndex];
+      document.getElementById("front").textContent = card.front;
+      document.getElementById("back").textContent = card.back;
+
+      const flashcard = document.getElementById("flashcard");
+      flashcard.classList.remove("flipped");
+
+      document.getElementById("next-button").style.display = "none";
+    }
+
+    // Przewracanie fiszki
+    function flipCard() {
+      const flashcard = document.getElementById("flashcard");
+      flashcard.classList.toggle("flipped");
+
+      if (flashcard.classList.contains("flipped")) {
+        document.getElementById("next-button").style.display = "block";
+      }
     }
 
     // Tryb ciemny
@@ -142,9 +178,6 @@
       const themeToggle = document.querySelector(".theme-toggle");
       themeToggle.textContent = currentTheme === "dark" ? "🌙" : "☀️";
     }
-
-    // Inicjalizacja
-    displayFlashcards();
   </script>
 </body>
 </html>
