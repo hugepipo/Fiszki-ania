@@ -213,4 +213,13 @@
     function toggleTheme() {
       const body = document.body;
       const currentTheme = body.getAttribute("data-theme");
-      body.setAttribute
+      body.setAttribute("data-theme", currentTheme === "dark" ? "light" : "dark");
+      const themeToggle = document.querySelector(".theme-toggle");
+      themeToggle.textContent = currentTheme === "dark" ? "🌙" : "☀️";
+    }
+
+    // Wyświetl pierwszą fiszkę
+    showNextCard();
+  </script>
+</body>
+</html>
