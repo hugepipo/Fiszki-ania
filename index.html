@@ -19,163 +19,132 @@
 
     body {
       font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-wrap: wrap;
-      height: 100vh;
-      margin: 0;
       background-color: var(--background-color);
       color: var(--text-color);
+      margin: 0;
+      padding: 20px;
       transition: background-color 0.3s, color 0.3s;
-    }
-
-    .card {
-      width: 300px;
-      height: 200px;
-      background-color: var(--card-color);
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      font-size: 24px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      cursor: pointer;
-      position: relative;
-      transform-style: preserve-3d;
-      transition: transform 0.5s, background-color 0.3s, color 0.3s;
-      margin: 10px;
-    }
-
-    .card.flipped {
-      transform: rotateY(180deg);
-    }
-
-    .card-content {
-      position: absolute;
-      backface-visibility: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      height: 100%;
-    }
-
-    .card-back {
-      transform: rotateY(180deg);
     }
 
     .theme-toggle {
-      position: absolute;
+      position: fixed;
       top: 20px;
       right: 20px;
-      background: var(--card-color);
-      border: 1px solid #ccc;
-      border-radius: 20px;
-      padding: 10px 20px;
+      background: none;
+      border: none;
       cursor: pointer;
+      font-size: 24px;
       color: var(--text-color);
+      transition: color 0.3s;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 500px;
+      margin: 10px auto;
+      padding: 20px;
+      background-color: var(--card-color);
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      font-size: 24px;
       transition: background-color 0.3s, color 0.3s;
+    }
+
+    .card.color-card {
+      font-size: 0;
+      padding: 0;
     }
   </style>
 </head>
-<body>
-  <button class="theme-toggle" onclick="toggleTheme()">Zmień tryb</button>
+<body data-theme="light">
+  <!-- Przycisk do zmiany trybu -->
+  <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
 
   <!-- Fiszki -->
-  <div class="card" onclick="flipCard(this)">
-    <div class="card-content card-front">Cześć</div>
-    <div class="card-content card-back">Ciao</div>
-  </div>
-  <div class="card" onclick="flipCard(this)">
-    <div class="card-content card-front">Dziękuję</div>
-    <div class="card-content card-back">Grazie</div>
-  </div>
-  <div class="card" onclick="flipCard(this)">
-    <div class="card-content card-front">Proszę</div>
-    <div class="card-content card-back">Prego</div>
-  </div>
-  <div class="card" onclick="flipCard(this)">
-    <div class="card-content card-front">Jak się masz?</div>
-    <div class="card-content card-back">Come stai?</div>
-  </div>
-  <div class="card" onclick="flipCard(this)">
-    <div class="card-content card-front">Dzień dobry</div>
-    <div class="card-content card-back">Buongiorno</div>
-  </div>
-  <div class="card" onclick="flipCard(this)">
-    <div class="card-content card-front">Dobry wieczór</div>
-    <div class="card-content card-back">Buonasera</div>
-  </div>
-  <div class="card" onclick="flipCard(this)">
-    <div class="card-content card-front">Dobranoc</div>
-    <div class="card-content card-back">Buonanotte</div>
-  </div>
-  <div class="card" onclick="flipCard(this)">
-    <div class="card-content card-front">Do widzenia</div>
-    <div class="card-content card-back">Arrivederci</div>
-  </div>
-  <div class="card" onclick="flipCard(this)">
-    <div class="card-content card-front">Tak</div>
-    <div class="card-content card-back">Sì</div>
-  </div>
-  <div class="card" onclick="flipCard(this)">
-    <div class="card-content card-front">Nie</div>
-    <div class="card-content card-back">No</div>
-  </div>
-  <div class="card" onclick="flipCard(this)">
-    <div class="card-content card-front">Przepraszam</div>
-    <div class="card-content card-back">Mi scusi</div>
-  </div>
-  <div class="card" onclick="flipCard(this)">
-    <div class="card-content card-front">Pomocy!</div>
-    <div class="card-content card-back">Aiuto!</div>
-  </div>
-  <div class="card" onclick="flipCard(this)">
-    <div class="card-content card-front">Ile to kosztuje?</div>
-    <div class="card-content card-back">Quanto costa?</div>
-  </div>
-  <div class="card" onclick="flipCard(this)">
-    <div class="card-content card-front">Mam pytanie</div>
-    <div class="card-content card-back">Ho una domanda</div>
-  </div>
-  <div class="card" onclick="flipCard(this)">
-    <div class="card-content card-front">Co to jest?</div>
-    <div class="card-content card-back">Che cos'è?</div>
-  </div>
-  <div class="card" onclick="flipCard(this)">
-    <div class="card-content card-front">Gdzie jest toaleta?</div>
-    <div class="card-content card-back">Dov'è il bagno?</div>
-  </div>
-  <div class="card" onclick="flipCard(this)">
-    <div class="card-content card-front">Nie rozumiem</div>
-    <div class="card-content card-back">Non capisco</div>
-  </div>
-  <div class="card" onclick="flipCard(this)">
-    <div class="card-content card-front">Proszę powtórzyć</div>
-    <div class="card-content card-back">Per favore ripeta</div>
-  </div>
-  <div class="card" onclick="flipCard(this)">
-    <div class="card-content card-front">Na zdrowie</div>
-    <div class="card-content card-back">Salute</div>
-  </div>
-  <div class="card" onclick="flipCard(this)">
-    <div class="card-content card-front">Miłego dnia</div>
-    <div class="card-content card-back">Buona giornata</div>
-  </div>
+  <div id="flashcards"></div>
 
   <script>
-    function flipCard(card) {
-      card.classList.toggle("flipped");
+    // Fiszki
+    const flashcardsData = [
+      { front: "Cześć", back: "Ciao" },
+      { front: "Dziękuję", back: "Grazie" },
+      { front: "Proszę", back: "Prego" },
+      { front: "Jak się masz?", back: "Come stai?" },
+      { front: "Dzień dobry", back: "Buongiorno" },
+      { front: "Dobry wieczór", back: "Buonasera" },
+      { front: "Dobranoc", back: "Buonanotte" },
+      { front: "Do widzenia", back: "Arrivederci" },
+      { front: "Tak", back: "Sì" },
+      { front: "Nie", back: "No" },
+      { front: "Przepraszam", back: "Mi scusi" },
+      { front: "Pomocy!", back: "Aiuto!" },
+      { front: "Ile to kosztuje?", back: "Quanto costa?" },
+      { front: "Mam pytanie", back: "Ho una domanda" },
+      { front: "Co to jest?", back: "Che cos'è?" },
+      { front: "Gdzie jest toaleta?", back: "Dov'è il bagno?" },
+      { front: "Nie rozumiem", back: "Non capisco" },
+      { front: "Proszę powtórzyć", back: "Per favore ripeta" },
+      { front: "Na zdrowie", back: "Salute" },
+      { front: "Miłego dnia", back: "Buona giornata" },
+      // Fiszki z kolorami
+      { front: "Czerwony", back: "Rosso", color: "red" },
+      { front: "Niebieski", back: "Blu", color: "blue" },
+      { front: "Zielony", back: "Verde", color: "green" },
+      { front: "Żółty", back: "Giallo", color: "yellow" },
+      { front: "Czarny", back: "Nero", color: "black" },
+      { front: "Biały", back: "Bianco", color: "white" },
+      { front: "Różowy", back: "Rosa", color: "pink" },
+      { front: "Pomarańczowy", back: "Arancione", color: "orange" },
+      { front: "Szary", back: "Grigio", color: "gray" },
+      { front: "Brązowy", back: "Marrone", color: "brown" },
+      // Nowe fiszki
+      { front: "Myszka", back: "Topo" },
+      { front: "Kocham Anię", back: "Amo Ania" },
+      { front: "Kocham myszkę", back: "Amo il topo" }
+    ];
+
+    // Funkcja losująca kolejność fiszek
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
     }
 
-    function toggleTheme() {
-      document.body.setAttribute("data-theme", 
-        document.body.getAttribute("data-theme") === "dark" ? "" : "dark"
-      );
+    // Wyświetl fiszki
+    function displayFlashcards() {
+      shuffle(flashcardsData);
+      const container = document.getElementById("flashcards");
+      container.innerHTML = flashcardsData
+        .map((card) =>
+          card.color
+            ? `
+          <div class="card color-card" style="background-color: ${card.color}" onclick="alert('${card.back}')">
+          </div>
+        `
+            : `
+          <div class="card" onclick="this.classList.toggle('flipped')">
+            <div class="card-front">${card.front}</div>
+            <div class="card-back">${card.back}</div>
+          </div>
+        `
+        )
+        .join("");
     }
+
+    // Tryb ciemny
+    function toggleTheme() {
+      const body = document.body;
+      const currentTheme = body.getAttribute("data-theme");
+      body.setAttribute("data-theme", currentTheme === "dark" ? "light" : "dark");
+      const themeToggle = document.querySelector(".theme-toggle");
+      themeToggle.textContent = currentTheme === "dark" ? "🌙" : "☀️";
+    }
+
+    // Inicjalizacja
+    displayFlashcards();
   </script>
 </body>
 </html>
