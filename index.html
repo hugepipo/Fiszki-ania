@@ -80,7 +80,15 @@
     }
 
     .color-card {
-      font-size: 0;
+      font-size: 0; /* Brak tekstu na przedniej stronie */
+    }
+
+    .card-content.card-back {
+      color: black; /* Domyślny kolor tekstu na tylnej stronie */
+    }
+
+    .color-card .card-content.card-back {
+      color: white; /* Domyślny kolor dla ciemnego tła */
     }
 
     #next-button {
@@ -104,8 +112,8 @@
 
   <!-- Kontener fiszki -->
   <div class="card" id="flashcard" onclick="flipCard()">
-    <div class="card-content card-front" id="front">Cześć</div>
-    <div class="card-content card-back" id="back">Ciao</div>
+    <div class="card-content card-front" id="front"></div>
+    <div class="card-content card-back" id="back"></div>
   </div>
 
   <!-- Przycisk Next -->
@@ -171,15 +179,18 @@
 
       const card = availableCards.pop();
       if (card.color) {
+        const isDarkColor = ["black", "blue", "red", "green", "brown", "gray"].includes(card.color);
         document.getElementById("flashcard").classList.add("color-card");
         document.getElementById("flashcard").style.backgroundColor = card.color;
         document.getElementById("front").textContent = "";
         document.getElementById("back").textContent = card.back;
+        document.getElementById("back").style.color = isDarkColor ? "white" : "black";
       } else {
         document.getElementById("flashcard").classList.remove("color-card");
         document.getElementById("flashcard").style.backgroundColor = "var(--card-color)";
         document.getElementById("front").textContent = card.front;
         document.getElementById("back").textContent = card.back;
+        document.getElementById("back").style.color = "var(--text-color)";
       }
 
       const flashcard = document.getElementById("flashcard");
@@ -202,13 +213,4 @@
     function toggleTheme() {
       const body = document.body;
       const currentTheme = body.getAttribute("data-theme");
-      body.setAttribute("data-theme", currentTheme === "dark" ? "light" : "dark");
-      const themeToggle = document.querySelector(".theme-toggle");
-      themeToggle.textContent = currentTheme === "dark" ? "🌙" : "☀️";
-    }
-
-    // Wyświetl pierwszą fiszkę
-    showNextCard();
-  </script>
-</body>
-</html>
+      body.setAttribute
