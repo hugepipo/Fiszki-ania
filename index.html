@@ -79,6 +79,10 @@
       transform: rotateY(180deg);
     }
 
+    .color-card {
+      font-size: 0;
+    }
+
     #next-button {
       margin-top: 20px;
       padding: 10px 20px;
@@ -130,12 +134,23 @@
       { front: "Proszę powtórzyć", back: "Per favore ripeta" },
       { front: "Na zdrowie", back: "Salute" },
       { front: "Miłego dnia", back: "Buona giornata" },
-      { front: "Myszka", back: "Topolino" },
+      { front: "Myszka", back: "Topolina" },
       { front: "Kocham Anię", back: "Amo Ania" },
-      { front: "Kocham moją myszkę", back: "Amo la mia topolina" }
+      { front: "Kocham moją myszkę", back: "Amo la mia topolina" },
+      // Fiszki z kolorami
+      { front: "", back: "Rosso", color: "red" },
+      { front: "", back: "Blu", color: "blue" },
+      { front: "", back: "Verde", color: "green" },
+      { front: "", back: "Giallo", color: "yellow" },
+      { front: "", back: "Nero", color: "black" },
+      { front: "", back: "Bianco", color: "white" },
+      { front: "", back: "Rosa", color: "pink" },
+      { front: "", back: "Arancione", color: "orange" },
+      { front: "", back: "Grigio", color: "gray" },
+      { front: "", back: "Marrone", color: "brown" }
     ];
 
-    let currentCardIndex = 0;
+    let availableCards = [...flashcardsData];
 
     // Funkcja losująca kolejność fiszek
     function shuffle(array) {
@@ -145,14 +160,27 @@
       }
     }
 
-    shuffle(flashcardsData);
+    shuffle(availableCards);
 
     // Wyświetlanie nowej fiszki
     function showNextCard() {
-      currentCardIndex = (currentCardIndex + 1) % flashcardsData.length;
-      const card = flashcardsData[currentCardIndex];
-      document.getElementById("front").textContent = card.front;
-      document.getElementById("back").textContent = card.back;
+      if (availableCards.length === 0) {
+        availableCards = [...flashcardsData];
+        shuffle(availableCards);
+      }
+
+      const card = availableCards.pop();
+      if (card.color) {
+        document.getElementById("flashcard").classList.add("color-card");
+        document.getElementById("flashcard").style.backgroundColor = card.color;
+        document.getElementById("front").textContent = "";
+        document.getElementById("back").textContent = card.back;
+      } else {
+        document.getElementById("flashcard").classList.remove("color-card");
+        document.getElementById("flashcard").style.backgroundColor = "var(--card-color)";
+        document.getElementById("front").textContent = card.front;
+        document.getElementById("back").textContent = card.back;
+      }
 
       const flashcard = document.getElementById("flashcard");
       flashcard.classList.remove("flipped");
@@ -178,6 +206,9 @@
       const themeToggle = document.querySelector(".theme-toggle");
       themeToggle.textContent = currentTheme === "dark" ? "🌙" : "☀️";
     }
+
+    // Wyświetl pierwszą fiszkę
+    showNextCard();
   </script>
 </body>
 </html>
