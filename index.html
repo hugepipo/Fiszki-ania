@@ -31,16 +31,39 @@
       height: 100vh;
     }
 
-    .theme-toggle {
+    .menu-toggle {
       position: fixed;
       top: 20px;
-      right: 20px;
+      left: 20px;
       background: none;
       border: none;
-      cursor: pointer;
       font-size: 24px;
+      cursor: pointer;
       color: var(--text-color);
-      transition: color 0.3s;
+    }
+
+    .menu {
+      position: absolute;
+      top: 60px;
+      left: 20px;
+      background-color: var(--card-color);
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      display: none;
+      flex-direction: column;
+    }
+
+    .menu a {
+      padding: 10px 15px;
+      text-decoration: none;
+      color: var(--text-color);
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .menu a:hover {
+      background-color: #ddd;
     }
 
     .card {
@@ -52,45 +75,29 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       text-align: center;
       font-size: 24px;
-      transition: background-color 0.3s, color 0.3s, transform 0.5s;
+      transition: background-color 0.3s, color 0.3s;
       display: flex;
       justify-content: center;
       align-items: center;
       position: relative;
-      transform-style: preserve-3d;
-      cursor: pointer;
     }
 
-    .card-content {
-      position: absolute;
-      backface-visibility: hidden;
-      display: flex;
-      justify-content: center;
+    #quiz-section {
+      display: none;
+      flex-direction: column;
       align-items: center;
-      width: 100%;
-      height: 100%;
-      color: black; /* Domyślny kolor tekstu */
-      font-size: 24px;
     }
 
-    .card-back {
-      transform: rotateY(180deg);
-    }
-
-    .card.flipped {
-      transform: rotateY(180deg);
-    }
-
-    .color-card .card-content.card-back {
-      color: black; /* Czarny tekst na jasnych tłach */
-    }
-
-    .color-card.dark-text .card-content.card-back {
-      color: white; /* Biały tekst na ciemnych tłach */
-    }
-
-    #next-button {
+    #quiz-input {
       margin-top: 20px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    #quiz-check {
+      margin-top: 10px;
       padding: 10px 20px;
       font-size: 16px;
       border: none;
@@ -99,26 +106,35 @@
       color: var(--text-color);
       cursor: pointer;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      display: none;
-      transition: background-color 0.3s, color 0.3s;
+    }
+
+    #feedback {
+      margin-top: 10px;
+      font-size: 16px;
     }
   </style>
 </head>
 <body data-theme="light">
-  <!-- Przycisk do zmiany trybu -->
-  <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
-
-  <!-- Kontener fiszki -->
-  <div class="card" id="flashcard" onclick="flipCard()">
-    <div class="card-content card-front" id="front"></div>
-    <div class="card-content card-back" id="back"></div>
+  <!-- Menu -->
+  <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+  <div class="menu" id="menu">
+    <a onclick="showFlashcards()">Tryb fiszek</a>
+    <a onclick="showQuiz()">Tryb quiz</a>
   </div>
 
-  <!-- Przycisk Next -->
-  <button id="next-button" onclick="showNextCard()">Next</button>
+  <!-- Sekcja fiszek -->
+  <div class="card" id="flashcard"></div>
+
+  <!-- Sekcja quiz -->
+  <div id="quiz-section">
+    <div id="quiz-question"></div>
+    <input type="text" id="quiz-input" placeholder="Twoja odpowiedź po włosku">
+    <button id="quiz-check" onclick="checkAnswer()">Sprawdź</button>
+    <div id="feedback"></div>
+  </div>
 
   <script>
-    // Fiszki
+    // Dane fiszek
     const flashcardsData = [
       { front: "Cześć", back: "Ciao" },
       { front: "Dziękuję", back: "Grazie" },
@@ -139,26 +155,13 @@
       { front: "Nie rozumiem", back: "Non capisco" },
       { front: "Proszę powtórzyć", back: "Per favore ripeta" },
       { front: "Na zdrowie", back: "Salute" },
-      { front: "Miłego dnia", back: "Buona giornata" },
-      { front: "Myszka", back: "Topolina" },
-      { front: "Kocham Anię", back: "Amo Ania" },
-      { front: "Kocham moją myszkę", back: "Amo la mia topolina" },
-      // Fiszki z kolorami
-      { front: "", back: "Rosso", color: "red" },
-      { front: "", back: "Blu", color: "blue" },
-      { front: "", back: "Verde", color: "green" },
-      { front: "", back: "Giallo", color: "yellow" },
-      { front: "", back: "Nero", color: "black" },
-      { front: "", back: "Bianco", color: "white" },
-      { front: "", back: "Rosa", color: "pink" },
-      { front: "", back: "Arancione", color: "orange" },
-      { front: "", back: "Grigio", color: "gray" },
-      { front: "", back: "Marrone", color: "brown" }
+      { front: "Miłego dnia", back: "Buona giornata" }
     ];
 
     let availableCards = [...flashcardsData];
+    let currentQuizCard = null;
 
-    // Funkcja losująca kolejność fiszek
+    // Funkcja losowania fiszek
     function shuffle(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -168,55 +171,45 @@
 
     shuffle(availableCards);
 
-    // Wyświetlanie nowej fiszki
-    function showNextCard() {
+    // Wyświetlanie fiszek
+    function showFlashcards() {
+      document.getElementById("flashcard").style.display = "flex";
+      document.getElementById("quiz-section").style.display = "none";
+      const card = availableCards.pop();
+      document.getElementById("flashcard").textContent = card.front;
+    }
+
+    // Wyświetlanie trybu quiz
+    function showQuiz() {
+      document.getElementById("flashcard").style.display = "none";
+      document.getElementById("quiz-section").style.display = "flex";
       if (availableCards.length === 0) {
         availableCards = [...flashcardsData];
         shuffle(availableCards);
       }
+      currentQuizCard = availableCards.pop();
+      document.getElementById("quiz-question").textContent = currentQuizCard.front;
+      document.getElementById("quiz-input").value = "";
+      document.getElementById("feedback").textContent = "";
+    }
 
-      const card = availableCards.pop();
-      const flashcard = document.getElementById("flashcard");
-
-      if (card.color) {
-        const isDarkColor = ["black", "blue", "red", "green", "brown", "gray"].includes(card.color);
-        flashcard.classList.add("color-card");
-        flashcard.classList.toggle("dark-text", isDarkColor);
-        flashcard.style.backgroundColor = card.color;
-        document.getElementById("front").textContent = "";
-        document.getElementById("back").textContent = card.back;
+    // Sprawdzanie odpowiedzi
+    function checkAnswer() {
+      const answer = document.getElementById("quiz-input").value.trim();
+      if (answer.toLowerCase() === currentQuizCard.back.toLowerCase()) {
+        document.getElementById("feedback").textContent = "Poprawna odpowiedź!";
+        document.getElementById("feedback").style.color = "green";
       } else {
-        flashcard.classList.remove("color-card", "dark-text");
-        flashcard.style.backgroundColor = "var(--card-color)";
-        document.getElementById("front").textContent = card.front;
-        document.getElementById("back").textContent = card.back;
-      }
-
-      flashcard.classList.remove("flipped");
-      document.getElementById("next-button").style.display = "none";
-    }
-
-    // Przewracanie fiszki
-    function flipCard() {
-      const flashcard = document.getElementById("flashcard");
-      flashcard.classList.toggle("flipped");
-
-      if (flashcard.classList.contains("flipped")) {
-        document.getElementById("next-button").style.display = "block";
+        document.getElementById("feedback").textContent = `Niepoprawna odpowiedź! Poprawna: ${currentQuizCard.back}`;
+        document.getElementById("feedback").style.color = "red";
       }
     }
 
-    // Tryb ciemny
-    function toggleTheme() {
-      const body = document.body;
-      const currentTheme = body.getAttribute("data-theme");
-      body.setAttribute("data-theme", currentTheme === "dark" ? "light" : "dark");
-      const themeToggle = document.querySelector(".theme-toggle");
-      themeToggle.textContent = currentTheme === "dark" ? "🌙" : "☀️";
+    // Obsługa menu
+    function toggleMenu() {
+      const menu = document.getElementById("menu");
+      menu.style.display = menu.style.display === "flex" ? "none" : "flex";
     }
-
-    // Wyświetl pierwszą fiszkę
-    showNextCard();
   </script>
 </body>
 </html>
