@@ -87,6 +87,12 @@
       position: relative;
     }
 
+    #quiz-header {
+      font-size: 20px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
     #quiz-input {
       margin: 10px 0;
       padding: 10px;
@@ -130,6 +136,7 @@
 
   <!-- Sekcja quiz -->
   <div id="quiz-section">
+    <div id="quiz-header">Tryb quiz</div>
     <div id="quiz-question"></div>
     <input type="text" id="quiz-input" placeholder="Twoja odpowiedź po włosku">
     <button id="quiz-check" onclick="checkAnswer()">Sprawdź</button>
@@ -145,7 +152,6 @@
       { front: "Myszka", back: "Topolina" },
       { front: "Kocham moją myszkę", back: "Amo la mia topolina" },
       { front: "Kocham Anię", back: "Amo Ania" },
-      // Kolory
       { front: "Kolor: czerwony", back: "Rosso" },
       { front: "Kolor: niebieski", back: "Blu" },
       { front: "Kolor: zielony", back: "Verde" },
@@ -203,7 +209,10 @@
       if (input === currentQuizCard.back.toLowerCase()) {
         feedback.textContent = "👍 Poprawna odpowiedź!";
         feedback.style.color = "green";
-        setTimeout(showQuiz, 2000);
+        setTimeout(() => {
+          feedback.textContent = "";
+          showQuiz();
+        }, 2000);
       } else if (attempts === 0) {
         feedback.textContent = "👎 Spróbuj ponownie!";
         feedback.style.color = "red";
@@ -211,7 +220,10 @@
       } else {
         feedback.textContent = `Słabiak! Tu masz odpowiedź: ${currentQuizCard.back}`;
         feedback.style.color = "red";
-        setTimeout(showQuiz, 2000);
+        setTimeout(() => {
+          feedback.textContent = "";
+          showQuiz();
+        }, 2000);
       }
     }
   </script>
