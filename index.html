@@ -222,10 +222,14 @@
       { front: "Mam na imię", back: "Mi chiamo" },
       { front: "Dobrze", back: "Bene" },
       { front: "Źle", back: "Male" },
-      { front: "Pogoda jest ładna", back: "Il tempo è bello" }
+      { front: "Pogoda jest ładna", back: "Il tempo è bello" },
+      { front: "Myszka", back: "Topolina" },
+      { front: "Kocham moją myszkę", back: "Amo la mia topolina" },
+      { front: "Kocham Anię", back: "Amo Ania" }
     ];
 
     let availableCards = [...flashcardsData];
+    let usedCards = [];
     let currentQuizCard = null;
     let attempts = 0;
 
@@ -259,10 +263,13 @@
 
     function showNextCard() {
       if (availableCards.length === 0) {
-        availableCards = [...flashcardsData];
+        availableCards = [...usedCards];
+        usedCards = [];
         shuffle(availableCards);
       }
       const card = availableCards.pop();
+      usedCards.push(card);
+
       const flashcard = document.getElementById("flashcard");
       const front = document.getElementById("front");
       const back = document.getElementById("back");
@@ -281,10 +288,12 @@
       document.getElementById("flashcards-section").style.display = "none";
       document.getElementById("quiz-section").style.display = "flex";
       if (availableCards.length === 0) {
-        availableCards = [...flashcardsData];
+        availableCards = [...usedCards];
+        usedCards = [];
         shuffle(availableCards);
       }
       currentQuizCard = availableCards.pop();
+      usedCards.push(currentQuizCard);
       document.getElementById("quiz-question").textContent = currentQuizCard.front;
       document.getElementById("quiz-input").value = "";
       document.getElementById("feedback").textContent = "";
