@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fiszki Włoskie</title>
+  <title>Fiszki Włoskie - Quiz</title>
   <style>
     :root {
       --background-color: #f4f4f4;
@@ -66,34 +66,40 @@
       background-color: #ddd;
     }
 
-    .card {
-      width: 300px;
-      height: 200px;
-      background-color: var(--card-color);
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      font-size: 24px;
-      transition: background-color 0.3s, color 0.3s;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-    }
-
     #quiz-section {
-      display: none;
+      display: flex;
       flex-direction: column;
       align-items: center;
     }
 
+    #quiz-question {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
     #quiz-input {
-      margin-top: 20px;
-      padding: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .quiz-letter {
+      width: 20px;
+      height: 2px;
+      background-color: black;
+      margin: 0 5px;
+      position: relative;
+    }
+
+    .quiz-letter::after {
+      content: attr(data-letter);
+      position: absolute;
+      top: -25px;
+      left: 50%;
+      transform: translateX(-50%);
       font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
+      color: var(--text-color);
     }
 
     #quiz-check {
@@ -110,7 +116,10 @@
 
     #feedback {
       margin-top: 10px;
-      font-size: 16px;
+      font-size: 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   </style>
 </head>
@@ -118,50 +127,29 @@
   <!-- Menu -->
   <button class="menu-toggle" onclick="toggleMenu()">☰</button>
   <div class="menu" id="menu">
-    <a onclick="showFlashcards()">Tryb fiszek</a>
     <a onclick="showQuiz()">Tryb quiz</a>
   </div>
-
-  <!-- Sekcja fiszek -->
-  <div class="card" id="flashcard"></div>
 
   <!-- Sekcja quiz -->
   <div id="quiz-section">
     <div id="quiz-question"></div>
-    <input type="text" id="quiz-input" placeholder="Twoja odpowiedź po włosku">
+    <div id="quiz-input"></div>
     <button id="quiz-check" onclick="checkAnswer()">Sprawdź</button>
     <div id="feedback"></div>
   </div>
 
   <script>
-    // Dane fiszek
     const flashcardsData = [
       { front: "Cześć", back: "Ciao" },
       { front: "Dziękuję", back: "Grazie" },
       { front: "Proszę", back: "Prego" },
-      { front: "Jak się masz?", back: "Come stai?" },
-      { front: "Dzień dobry", back: "Buongiorno" },
-      { front: "Dobry wieczór", back: "Buonasera" },
-      { front: "Dobranoc", back: "Buonanotte" },
-      { front: "Do widzenia", back: "Arrivederci" },
-      { front: "Tak", back: "Sì" },
-      { front: "Nie", back: "No" },
-      { front: "Przepraszam", back: "Mi scusi" },
-      { front: "Pomocy!", back: "Aiuto!" },
-      { front: "Ile to kosztuje?", back: "Quanto costa?" },
-      { front: "Mam pytanie", back: "Ho una domanda" },
-      { front: "Co to jest?", back: "Che cos'è?" },
-      { front: "Gdzie jest toaleta?", back: "Dov'è il bagno?" },
-      { front: "Nie rozumiem", back: "Non capisco" },
-      { front: "Proszę powtórzyć", back: "Per favore ripeta" },
-      { front: "Na zdrowie", back: "Salute" },
-      { front: "Miłego dnia", back: "Buona giornata" }
+      { front: "Jak się masz?", back: "Come stai?" }
     ];
 
     let availableCards = [...flashcardsData];
     let currentQuizCard = null;
+    let attempts = 0;
 
-    // Funkcja losowania fiszek
     function shuffle(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -171,17 +159,12 @@
 
     shuffle(availableCards);
 
-    // Wyświetlanie fiszek
-    function showFlashcards() {
-      document.getElementById("flashcard").style.display = "flex";
-      document.getElementById("quiz-section").style.display = "none";
-      const card = availableCards.pop();
-      document.getElementById("flashcard").textContent = card.front;
+    function toggleMenu() {
+      const menu = document.getElementById("menu");
+      menu.style.display = menu.style.display === "flex" ? "none" : "flex";
     }
 
-    // Wyświetlanie trybu quiz
     function showQuiz() {
-      document.getElementById("flashcard").style.display = "none";
       document.getElementById("quiz-section").style.display = "flex";
       if (availableCards.length === 0) {
         availableCards = [...flashcardsData];
@@ -189,26 +172,41 @@
       }
       currentQuizCard = availableCards.pop();
       document.getElementById("quiz-question").textContent = currentQuizCard.front;
-      document.getElementById("quiz-input").value = "";
+      renderInputField(currentQuizCard.back.length);
       document.getElementById("feedback").textContent = "";
+      attempts = 0;
     }
 
-    // Sprawdzanie odpowiedzi
-    function checkAnswer() {
-      const answer = document.getElementById("quiz-input").value.trim();
-      if (answer.toLowerCase() === currentQuizCard.back.toLowerCase()) {
-        document.getElementById("feedback").textContent = "Poprawna odpowiedź!";
-        document.getElementById("feedback").style.color = "green";
-      } else {
-        document.getElementById("feedback").textContent = `Niepoprawna odpowiedź! Poprawna: ${currentQuizCard.back}`;
-        document.getElementById("feedback").style.color = "red";
+    function renderInputField(length) {
+      const quizInput = document.getElementById("quiz-input");
+      quizInput.innerHTML = "";
+      for (let i = 0; i < length; i++) {
+        const letterBox = document.createElement("div");
+        letterBox.className = "quiz-letter";
+        letterBox.dataset.letter = "";
+        quizInput.appendChild(letterBox);
       }
     }
 
-    // Obsługa menu
-    function toggleMenu() {
-      const menu = document.getElementById("menu");
-      menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+    function checkAnswer() {
+      const feedback = document.getElementById("feedback");
+      const inputLetters = Array.from(document.getElementsByClassName("quiz-letter"))
+        .map(letter => letter.dataset.letter)
+        .join("");
+
+      if (inputLetters.toLowerCase() === currentQuizCard.back.toLowerCase()) {
+        feedback.innerHTML = "👍 Poprawna odpowiedź!";
+        feedback.style.color = "green";
+        setTimeout(showQuiz, 2000);
+      } else if (attempts === 0) {
+        feedback.innerHTML = "👎 Spróbuj ponownie!";
+        feedback.style.color = "red";
+        attempts++;
+      } else {
+        feedback.innerHTML = `Słabiak! Tu masz odpowiedź: ${currentQuizCard.back}`;
+        feedback.style.color = "red";
+        setTimeout(showQuiz, 2000);
+      }
     }
   </script>
 </body>
