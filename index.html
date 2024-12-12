@@ -31,6 +31,17 @@
       height: 100vh;
     }
 
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      color: var(--text-color);
+    }
+
     .menu-toggle {
       position: fixed;
       top: 20px;
@@ -156,6 +167,7 @@
 <body data-theme="light">
   <!-- Menu -->
   <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+  <button class="theme-toggle" onclick="toggleTheme()">🌙 Tryb ciemny</button>
   <div class="menu" id="menu">
     <a onclick="showFlashcards()">Tryb fiszek</a>
     <a onclick="showQuiz()">Tryb quiz</a>
@@ -190,7 +202,27 @@
       { front: "Różowy", back: "Rosa" },
       { front: "Pomarańczowy", back: "Arancione" },
       { front: "Szary", back: "Grigio" },
-      { front: "Brązowy", back: "Marrone" }
+      { front: "Brązowy", back: "Marrone" },
+      { front: "Dziękuję", back: "Grazie" },
+      { front: "Proszę", back: "Prego" },
+      { front: "Jak się masz?", back: "Come stai?" },
+      { front: "Dzień dobry", back: "Buongiorno" },
+      { front: "Dobranoc", back: "Buonanotte" },
+      { front: "Tak", back: "Sì" },
+      { front: "Nie", back: "No" },
+      { front: "Kocham cię", back: "Ti amo" },
+      { front: "Ile to kosztuje?", back: "Quanto costa?" },
+      { front: "Przepraszam", back: "Mi scusi" },
+      { front: "Pomoc", back: "Aiuto" },
+      { front: "Do widzenia", back: "Arrivederci" },
+      { front: "Powodzenia", back: "Buona fortuna" },
+      { front: "Smacznego", back: "Buon appetito" },
+      { front: "Cześć", back: "Ciao" },
+      { front: "Do zobaczenia", back: "A presto" },
+      { front: "Mam na imię", back: "Mi chiamo" },
+      { front: "Dobrze", back: "Bene" },
+      { front: "Źle", back: "Male" },
+      { front: "Pogoda jest ładna", back: "Il tempo è bello" }
     ];
 
     let availableCards = [...flashcardsData];
@@ -209,6 +241,14 @@
     function toggleMenu() {
       const menu = document.getElementById("menu");
       menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+    }
+
+    function toggleTheme() {
+      const body = document.body;
+      const theme = body.getAttribute("data-theme");
+      body.setAttribute("data-theme", theme === "light" ? "dark" : "light");
+      document.querySelector(".theme-toggle").textContent =
+        theme === "light" ? "☀️ Tryb jasny" : "🌙 Tryb ciemny";
     }
 
     function showFlashcards() {
@@ -254,9 +294,9 @@
     function normalizeInput(input) {
       return input
         .toLowerCase()
-        .replace(/[!?.']/g, "") // Usuń znaki interpunkcyjne
-        .normalize("NFD") // Rozbij akcenty na podstawowe litery
-        .replace(/[\u0300-\u036f]/g, ""); // Usuń akcenty
+        .replace(/[!?.']/g, "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
     }
 
     function checkAnswer() {
