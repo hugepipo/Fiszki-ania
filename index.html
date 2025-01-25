@@ -214,44 +214,9 @@
   </div>
 
   <!-- Sekcja nauka -->
-<div id="learning-section">
-  <h2>Nauka dla początkujących</h2>
-  <div id="learning-menu">
-    <button onclick="showSection('rodzajniki')">Rodzajniki</button>
-    <button onclick="showSection('czasowniki')">Odmiana czasowników</button>
-    <button onclick="showSection('zaimki')">Zaimki wskazujące</button>
-    <button onclick="showSection('passato')">Passato Prossimo</button>
-    <button onclick="showSection('przymiotniki')">Wyjątki w odmianie przymiotników</button>
-  </div>
-  <div id="learning-content">
-    <div id="rodzajniki" class="content-section" style="display: none;">
-      <h3>1. Rodzajniki (articoli determinativi)</h3>
-      <p>Rodzajniki określają rodzaj i liczbę rzeczownika. Wyjątki i zasady:</p>
-      <ul>
-        <li><strong>Il:</strong> używany przed męskimi rzeczownikami w liczbie pojedynczej, które zaczynają się na spółgłoskę (np. <i>il libro</i>).</li>
-        <li><strong>Lo:</strong> używany przed męskimi rzeczownikami zaczynającymi się na: s+spółgłoska, ps, gn, z, x, y (np. <i>lo zaino</i>).</li>
-        <li><strong>L’:</strong> używany przed rzeczownikami męskimi i żeńskimi w liczbie pojedynczej zaczynającymi się na samogłoskę (np. <i>l’amico, l’amica</i>).</li>
-        <li><strong>Gli:</strong> używany przed męskimi rzeczownikami w liczbie mnogiej...</li>
-      </ul>
-    </div>
-    <div id="czasowniki" class="content-section" style="display: none;">
-      <h3>2. Odmiana czasowników (verbi regolari i nieregolari)</h3>
-      <p>Odmiana czasowników w języku włoskim zależy od końcówki w bezokoliczniku...</p>
-    </div>
-    <div id="zaimki" class="content-section" style="display: none;">
-      <h3>3. Zaimki wskazujące (pronomi dimostrativi)</h3>
-      <p>Użycie zaimków wskazujących...</p>
-    </div>
-    <div id="passato" class="content-section" style="display: none;">
-      <h3>4. Passato Prossimo (czas przeszły)</h3>
-      <p>Tworzymy za pomocą czasownika <strong>avere</strong> lub <strong>essere</strong>...</p>
-    </div>
-    <div id="przymiotniki" class="content-section" style="display: none;">
-      <h3>5. Wyjątki w odmianie przymiotników</h3>
-      <p>Przymiotniki muszą zgadzać się z rodzajem i liczbą rzeczownika...</p>
-    </div>
-  </div>
-</div>
+  <div id="learning-section">
+    <h2>Nauka dla początkujących</h2>
+    <div id="learning-content">
       <p>Witaj w sekcji nauki języka włoskiego! Oto kilka kluczowych zasad i ich definicji:</p>
 
       <h3>1. Rodzajniki (articoli determinativi)</h3>
@@ -426,14 +391,6 @@
       document.querySelector(".theme-toggle").textContent =
         theme === "light" ? "☀️ Tryb jasny" : "🌙 Tryb ciemny";
     }
-    
-    function showSection(sectionId) {
-  const sections = document.querySelectorAll(".content-section");
-  sections.forEach(section => {
-    section.style.display = "none";
-  });
-  document.getElementById(sectionId).style.display = "block";
-}
 
     function showFlashcards() {
       document.getElementById("flashcards-section").style.display = "block";
