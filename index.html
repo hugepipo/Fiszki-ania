@@ -18,17 +18,19 @@
     }
 
     body {
-      font-family: Arial, sans-serif;
-      background-color: var(--background-color);
-      color: var(--text-color);
-      margin: 0;
-      padding: 20px;
-      transition: background-color 0.3s, color 0.3s;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      background-color: #8a2be2; /* Fioletowe tło */
+  background-image: url(https://www.google.com/url?sa=i&url=https%3A%2F%2Fdinoanimals.pl%2Fzwierzeta%2Fmysz-domowa-mus-musculus%2F&psig=AOvVaw1vLZwjm0Nq8m7vd6pU1y4L&ust=1737892795541000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCJCgtazpkIsDFQAAAAAdAAAAABAE); /* Zamień na właściwy URL */
+  background-repeat: repeat;
+  background-size: 100px 100px; /* Rozmiar wzorków */
+  color: var(--text-color);
+  margin: 0;
+  padding: 20px;
+  transition: background-color 0.3s, color 0.3s;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
     }
 
     .theme-toggle {
@@ -227,6 +229,56 @@
   </div>
 
   <script>
+    const flashcardsData = [
+      { front: "Czerwony", back: "Rosso" },
+      { front: "Niebieski", back: "Blu" },
+      { front: "Zielony", back: "Verde" },
+      { front: "Żółty", back: "Giallo" },
+      { front: "Czarny", back: "Nero" },
+      { front: "Biały", back: "Bianco" },
+      { front: "Różowy", back: "Rosa" },
+      { front: "Pomarańczowy", back: "Arancione" },
+      { front: "Szary", back: "Grigio" },
+      { front: "Brązowy", back: "Marrone" },
+      { front: "Dziękuję", back: "Grazie" },
+      { front: "Proszę", back: "Prego" },
+      { front: "Jak się masz?", back: "Come stai?" },
+      { front: "Dzień dobry", back: "Buongiorno" },
+      { front: "Dobranoc", back: "Buonanotte" },
+      { front: "Tak", back: "Sì" },
+      { front: "Nie", back: "No" },
+      { front: "Kocham cię", back: "Ti amo" },
+      { front: "Ile to kosztuje?", back: "Quanto costa?" },
+      { front: "Przepraszam", back: "Mi scusi" },
+      { front: "Pomoc", back: "Aiuto" },
+      { front: "Do widzenia", back: "Arrivederci" },
+      { front: "Powodzenia", back: "Buona fortuna" },
+      { front: "Smacznego", back: "Buon appetito" },
+      { front: "Cześć", back: "Ciao" },
+      { front: "Do zobaczenia", back: "A presto" },
+      { front: "Mam na imię", back: "Mi chiamo" },
+      { front: "Dobrze", back: "Bene" },
+      { front: "Źle", back: "Male" },
+      { front: "Pogoda jest ładna", back: "Il tempo è bello" },
+      { front: "Myszka", back: "Topolina" },
+      { front: "Kocham moją myszkę", back: "Amo la mia topolina" },
+      { front: "Kocham Anię", back: "Amo Ania" }
+    ];
+
+    let availableCards = [...flashcardsData];
+    let usedCards = [];
+    let currentQuizCard = null;
+    let attempts = 0;
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    shuffle(availableCards);
+
     function toggleMenu() {
       const menu = document.getElementById("menu");
       menu.style.display = menu.style.display === "flex" ? "none" : "flex";
@@ -245,6 +297,29 @@
       document.getElementById("quiz-section").style.display = "none";
       document.getElementById("learning-section").style.display = "none";
       showNextCard();
+    }
+
+    function showNextCard() {
+      if (availableCards.length === 0) {
+        availableCards = [...usedCards];
+        usedCards = [];
+        shuffle(availableCards);
+      }
+      const card = availableCards.pop();
+      usedCards.push(card);
+
+      const flashcard = document.getElementById("flashcard");
+      const front = document.getElementById("front");
+      const back = document.getElementById("back");
+
+      flashcard.classList.remove("flipped");
+      front.textContent = card.front;
+      back.textContent = card.back;
+    }
+
+    function flipCard() {
+      const flashcard = document.getElementById("flashcard");
+      flashcard.classList.toggle("flipped");
     }
 
     function showQuiz() {
@@ -272,13 +347,6 @@
 
     function startLearningTest() {
       alert("Test funkcji nauki jeszcze nie jest gotowy!");
-    }
-
-    function shuffle(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
     }
   </script>
 </body>
