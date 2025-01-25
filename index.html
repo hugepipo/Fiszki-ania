@@ -78,7 +78,8 @@
     }
 
     #flashcards-section,
-    #quiz-section {
+    #quiz-section,
+    #learning-section {
       display: none;
     }
 
@@ -162,6 +163,24 @@
       cursor: pointer;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
+
+    #learning-content {
+      margin: 20px 0;
+      line-height: 1.6;
+      text-align: left;
+    }
+
+    #start-test {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      background-color: var(--card-color);
+      color: var(--text-color);
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
   </style>
 </head>
 <body data-theme="light">
@@ -171,6 +190,7 @@
   <div class="menu" id="menu">
     <a onclick="showFlashcards()">Tryb fiszek</a>
     <a onclick="showQuiz()">Tryb quiz</a>
+    <a onclick="showLearning()">Nauka</a>
   </div>
 
   <!-- Sekcja fiszek -->
@@ -191,57 +211,22 @@
     <div id="feedback"></div>
   </div>
 
+  <!-- Sekcja nauka -->
+  <div id="learning-section">
+    <h2>Nauka dla początkujących</h2>
+    <div id="learning-content">
+      <p>Witaj w sekcji nauki języka włoskiego! Oto kilka podstawowych informacji, które pomogą Ci zacząć:</p>
+      <ul>
+        <li><strong>Powitania:</strong> "Ciao" oznacza "Cześć", "Buongiorno" - "Dzień dobry".</li>
+        <li><strong>Podstawowe zwroty:</strong> "Grazie" to "Dziękuję", a "Prego" - "Proszę".</li>
+        <li><strong>Pytania:</strong> "Come ti chiami?" - "Jak masz na imię?".</li>
+      </ul>
+      <p>Spróbuj zapamiętać te podstawowe zwroty przed przejściem dalej.</p>
+    </div>
+    <button id="start-test" onclick="startLearningTest()">Rozpocznij test</button>
+  </div>
+
   <script>
-    const flashcardsData = [
-      { front: "Czerwony", back: "Rosso" },
-      { front: "Niebieski", back: "Blu" },
-      { front: "Zielony", back: "Verde" },
-      { front: "Żółty", back: "Giallo" },
-      { front: "Czarny", back: "Nero" },
-      { front: "Biały", back: "Bianco" },
-      { front: "Różowy", back: "Rosa" },
-      { front: "Pomarańczowy", back: "Arancione" },
-      { front: "Szary", back: "Grigio" },
-      { front: "Brązowy", back: "Marrone" },
-      { front: "Dziękuję", back: "Grazie" },
-      { front: "Proszę", back: "Prego" },
-      { front: "Jak się masz?", back: "Come stai?" },
-      { front: "Dzień dobry", back: "Buongiorno" },
-      { front: "Dobranoc", back: "Buonanotte" },
-      { front: "Tak", back: "Sì" },
-      { front: "Nie", back: "No" },
-      { front: "Kocham cię", back: "Ti amo" },
-      { front: "Ile to kosztuje?", back: "Quanto costa?" },
-      { front: "Przepraszam", back: "Mi scusi" },
-      { front: "Pomoc", back: "Aiuto" },
-      { front: "Do widzenia", back: "Arrivederci" },
-      { front: "Powodzenia", back: "Buona fortuna" },
-      { front: "Smacznego", back: "Buon appetito" },
-      { front: "Cześć", back: "Ciao" },
-      { front: "Do zobaczenia", back: "A presto" },
-      { front: "Mam na imię", back: "Mi chiamo" },
-      { front: "Dobrze", back: "Bene" },
-      { front: "Źle", back: "Male" },
-      { front: "Pogoda jest ładna", back: "Il tempo è bello" },
-      { front: "Myszka", back: "Topolina" },
-      { front: "Kocham moją myszkę", back: "Amo la mia topolina" },
-      { front: "Kocham Anię", back: "Amo Ania" }
-    ];
-
-    let availableCards = [...flashcardsData];
-    let usedCards = [];
-    let currentQuizCard = null;
-    let attempts = 0;
-
-    function shuffle(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-    }
-
-    shuffle(availableCards);
-
     function toggleMenu() {
       const menu = document.getElementById("menu");
       menu.style.display = menu.style.display === "flex" ? "none" : "flex";
@@ -258,35 +243,14 @@
     function showFlashcards() {
       document.getElementById("flashcards-section").style.display = "block";
       document.getElementById("quiz-section").style.display = "none";
+      document.getElementById("learning-section").style.display = "none";
       showNextCard();
-    }
-
-    function showNextCard() {
-      if (availableCards.length === 0) {
-        availableCards = [...usedCards];
-        usedCards = [];
-        shuffle(availableCards);
-      }
-      const card = availableCards.pop();
-      usedCards.push(card);
-
-      const flashcard = document.getElementById("flashcard");
-      const front = document.getElementById("front");
-      const back = document.getElementById("back");
-
-      flashcard.classList.remove("flipped");
-      front.textContent = card.front;
-      back.textContent = card.back;
-    }
-
-    function flipCard() {
-      const flashcard = document.getElementById("flashcard");
-      flashcard.classList.toggle("flipped");
     }
 
     function showQuiz() {
       document.getElementById("flashcards-section").style.display = "none";
       document.getElementById("quiz-section").style.display = "flex";
+      document.getElementById("learning-section").style.display = "none";
       if (availableCards.length === 0) {
         availableCards = [...usedCards];
         usedCards = [];
@@ -300,30 +264,20 @@
       attempts = 0;
     }
 
-    function normalizeInput(input) {
-      return input
-        .toLowerCase()
-        .replace(/[!?.']/g, "")
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "");
+    function showLearning() {
+      document.getElementById("flashcards-section").style.display = "none";
+      document.getElementById("quiz-section").style.display = "none";
+      document.getElementById("learning-section").style.display = "block";
     }
 
-    function checkAnswer() {
-      const input = normalizeInput(document.getElementById("quiz-input").value);
-      const correctAnswer = normalizeInput(currentQuizCard.back);
-      const feedback = document.getElementById("feedback");
+    function startLearningTest() {
+      alert("Test funkcji nauki jeszcze nie jest gotowy!");
+    }
 
-      if (input === correctAnswer) {
-        feedback.textContent = "👍 Poprawna odpowiedź!";
-        feedback.style.color = "green";
-        setTimeout(showQuiz, 2000);
-      } else if (attempts === 0) {
-        feedback.textContent = "👎 Spróbuj ponownie!";
-        feedback.style.color = "red";
-        attempts++;
-      } else {
-        feedback.textContent = `❌ Musisz podać poprawną odpowiedź: ${currentQuizCard.back}`;
-        feedback.style.color = "red";
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
       }
     }
   </script>
